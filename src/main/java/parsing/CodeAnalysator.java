@@ -1,14 +1,28 @@
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+package parsing;
+
+import drawing.Builder;
+import shapes.IfBlock;
+import shapes.Rectangle;
+import shapes.Shape;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CodeAnalysator {
+
+    private Builder builder;// = new Builder();
+
     private String[] types = {
             "byte", "short", "int", "long",
             "char", "float", "double", "boolean"
     };
+
+    public CodeAnalysator(Builder builder) {
+        this.builder = builder;
+    }
+
+    public Builder getBuilder() {
+        return builder;
+    }
 
     public void analyzeAll(ArrayList<String> list) {
         for (String s : list) {
@@ -25,6 +39,7 @@ public class CodeAnalysator {
 
         if(containsType) {
             System.out.println("Строка: " + string + " содержит простой тип!");
+            builder.addShape(new Rectangle(string));
         }
 
         if (string.contains("if")) {
@@ -33,6 +48,8 @@ public class CodeAnalysator {
             if (string.contains("{")) {
                 System.out.println("Иф открыт");
                 ifOpened = true;
+
+                builder.addShape(new IfBlock(text));
             } else {
                 System.out.println("Ошибка! Пишите { в одной строке с иф!");
             }
